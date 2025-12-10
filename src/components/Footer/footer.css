@@ -1,0 +1,131 @@
+.mui-style-ogmp5q {
+  display: flex;
+  min-height: 100vh;
+}
+.mui-style-z52qd3 {
+  color: rgba(15, 194, 89, 0.589);
+  transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  position: fixed;
+  z-index: 3;
+  inset: auto 0px 0px auto;
+  background-color: rgb(51, 54, 63);
+  box-shadow: none;
+  background-image: unset;
+  border-style: solid;
+  border-width: 1px 0px 0px;
+  border-color: rgb(69, 72, 81);
+}
+.mui-style-1uhepq3 {
+  position: relative;
+  display: flex;
+  -webkit-box-align: center;
+  padding-left: 2px;
+  padding-right: 2px;
+  min-height: 70px;
+  justify-content: space-around;
+  align-items: flex-start;
+}
+.mui-style-cd771o.active {
+  color: rgb(255, 255, 255);
+}
+.mui-style-cd771o {
+  padding: 6px 8px;
+  min-height: 70px;
+  text-decoration: none;
+  color: rgba(255, 255, 255, 1);
+  font-size: 12px;
+  line-height: 17px;
+  font-weight: 500;
+  font-family: Manrope, Inter, PingFangSC-Regular, "Microsoft YaHei", sans-serif;
+  /*flex: 1 0 20%;*/
+  display: flex;
+  flex-direction: column;
+  -webkit-box-align: center;
+  align-items: center;
+  text-align: center;
+  max-width: 25%;
+  overflow-wrap: anywhere;
+}
+.w36 {
+  max-width: 36px;
+}
+.w24 {
+  max-width: 24px;
+}
+.mui-style-1972y4e {
+  display: flex;
+  -webkit-box-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  position: relative;
+  overflow: hidden;
+  padding-top: 4px;
+}
+.bg-swap {
+  background-color: rgb(188, 255, 1);
+  padding: 6px;
+  border-radius: 8px;
+}
+@media screen and (min-width: 767px) {
+  .footer {
+    display: none;
+  }
+}
+
+.translate-div-footer {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+}
+.translate-div-footer div {
+  margin-right: 16px;
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 12px;
+  line-height: 17px;
+  font-weight: 600;
+}
+.translate-div-footer button {
+  display: inline-flex;
+  -webkit-box-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  outline: 0px;
+  border: 0px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  user-select: none;
+  vertical-align: middle;
+  appearance: none;
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.5);
+  opacity: 1;
+  padding: 2px;
+  width: 24px;
+  height: 24px;
+  border-radius: 8px;
+  background-color: rgb(37, 40, 49);
+}
+.translate-div-footer button div {
+  padding: 1px;
+  width: 20px;
+  height: 20px;
+  background-color: rgb(51, 54, 63);
+  border-radius: 6px;
+  margin-right: 0 !important;
+}
+.translate-div-footer img {
+  width: 20px;
+  height: 20px;
+}

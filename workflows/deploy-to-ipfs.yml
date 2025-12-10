@@ -1,0 +1,162 @@
+name: Deploy to IPFS via Pinata CAR
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:  # Allow manual triggers
+
+permissions:
+  contents: read
+  pull-requests: write
+  statuses: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Build project
+      run: npm run build
+
+    - name: Install deployment tools
+      run: |
+        npm install -g ipfs-car
+        npm install pinata@latest
+
+    - name: Create CAR file
+      id: create-car
+      run: |
+        mkdir -p .temp
+        npx ipfs-car pack build --output .temp/build.car --wrap
+        ROOT_CID=$(npx ipfs-car roots .temp/build.car)
+        echo "root_cid=$ROOT_CID" >> $GITHUB_OUTPUT
+        echo "📍 Root CID: $ROOT_CID"
+
+    - name: Upload to Pinata
+      id: upload
+      env:
+        PINATA_JWT: ${{ secrets.PINATA_JWT }}
+      run: |
+        node -e "
+        import { PinataSDK } from 'pinata';
+        import fs from 'fs';
+        import { IPFS_GATEWAYS } from './constants.js';
+        
+        (async () => {
+          try {
+            const pinata = new PinataSDK({ pinataJwt: process.env.PINATA_JWT });
+            await pinata.testAuthentication();
+            console.log('✅ Pinata authentication successful');
+            
+            const carBuffer = fs.readFileSync('.temp/build.car');
+            const carBlob = new Blob([carBuffer], { type: 'application/vnd.ipld.car' });
+            const carFile = new File([carBlob], 'build.car', { type: 'application/vnd.ipld.car' });
+            
+            const upload = await pinata.upload.public
+              .file(carFile)
+              .name('GitHub Actions Deploy - ${{ github.sha }}')
+              .car();
+            
+            const rootCid = '${{ steps.create-car.outputs.root_cid }}';
+            
+            console.log('✅ Upload successful!');
+            console.log('📍 IPFS CID:', upload.cid);
+            console.log('📍 Root CID:', rootCid);
+            
+            // CID-based subdomain gateway URL
+            const cidGatewayUrl = \`https://\${rootCid}.ipfs.\${IPFS_GATEWAYS.DWEB}/\`;
+            console.log('🌍 CID Gateway URL:', cidGatewayUrl);
+            
+            // Path-based gateway URL
+            const pathGatewayUrl = \`https://\${IPFS_GATEWAYS.DWEB}/ipfs/\${rootCid}\`;
+            
+            fs.writeFileSync(process.env.GITHUB_STEP_SUMMARY, 
+              '# 🎉 IPFS Deployment Successful!\\n\\n' +
+              '| Property | Value |\\n' +
+              '|----------|-------|\\n' +
+              '| Root CID | \`' + rootCid + '\` |\\n' +
+              '| CAR CID | \`' + upload.cid + '\` |\\n' +
+              '| CID Gateway | [' + rootCid + '.ipfs.dweb.link](' + cidGatewayUrl + ') |\\n' +
+              '| Path Gateway | [dweb.link](' + pathGatewayUrl + ') |\\n' +
+              '\\n✅ *Your website is live on IPFS!*\\n'
+            );
+            
+          } catch (error) {
+            console.error('❌ Deployment failed:', error.message);
+            process.exit(1);
+          }
+        })();
+        "
+
+    - name: Notify AWS Lambda Webhook
+      env:
+        WEBHOOK_URL: ${{ secrets.AWS_WEBHOOK_URL }}
+        WEBHOOK_SECRET: ${{ secrets.WEBHOOK_GITHUB_SECRET }}
+        ROOT_CID: ${{ steps.create-car.outputs.root_cid }}
+      run: |
+        echo "🔔 Sending deployment notification to webhook..."
+        
+        if [ -z "$WEBHOOK_URL" ]; then
+          echo "⚠️  AWS_WEBHOOK_URL secret not set, skipping webhook notification"
+          exit 0
+        fi
+        
+        if [ -z "$WEBHOOK_SECRET" ]; then
+          echo "⚠️  WEBHOOK_GITHUB_SECRET secret not set, skipping webhook notification"
+          exit 0
+        fi
+        
+        echo "📍 CID: $ROOT_CID"
+        echo "📍 Commit: ${{ github.sha }}"
+        echo "📍 Repository: ${{ github.repository }}"
+        
+        # Create webhook payload using jq (ensures proper JSON formatting)
+        PAYLOAD=$(jq -n \
+          --arg repo "https://github.com/${{ github.repository }}" \
+          --arg cid "$ROOT_CID" \
+          --arg commit "${{ github.sha }}" \
+          '{githubRepo: $repo, cid: $cid, commitSha: $commit}')
+        
+        echo "📦 Payload: $PAYLOAD"
+        
+        # Generate GitHub webhook signature (HMAC-SHA256)
+        SIGNATURE=$(echo -n "$PAYLOAD" | openssl dgst -sha256 -hmac "$WEBHOOK_SECRET" | sed 's/^.* //')
+        
+        echo "🔐 Signature generated: sha256=$SIGNATURE"
+        
+        # Send webhook notification with signature
+        RESPONSE=$(curl -s -X POST "$WEBHOOK_URL" \
+          -H "Content-Type: application/json" \
+          -H "X-Hub-Signature-256: sha256=$SIGNATURE" \
+          --data "$PAYLOAD")
+        
+        echo ""
+        echo "📬 Webhook Response:"
+        echo "$RESPONSE" | jq '.' || echo "$RESPONSE"
+        
+        # Check if webhook was successful
+        SUCCESS=$(echo "$RESPONSE" | jq -r '.success // false')
+        
+        if [ "$SUCCESS" = "true" ]; then
+          echo "✅ Webhook notification sent successfully!"
+        else
+          echo "⚠️  Webhook notification may have failed"
+          echo "Response: $RESPONSE"
+        fi
+
+    - name: Cleanup
+      if: always()
+      run: rm -rf .temp
+

@@ -1,0 +1,44 @@
+# ==============================================
+# Environment Variables Template
+# ==============================================
+# Copy this file to .env and fill in your values
+# File name: .env
+# ==============================================
+
+# WalletConnect Project ID (Required)
+# Get yours at: https://cloud.walletconnect.com
+VITE_WALLETCONNECT_PROJECT_ID=your_project_id_here
+
+# Smart Contract Addresses
+# NFT Contract Address (update for your deployment)
+VITE_NFT_CONTRACT_ADDRESS=0x508F3368A6CB61e9037A5E73c9F436b558DEABA3
+
+# USDT Contract Address (update for your deployment)
+VITE_USDT_CONTRACT_ADDRESS=0x07F1E75eDdd894C7D153e76b65a758c5e1C58E11
+
+# Network Configuration
+# Sepolia: 11155111 (Default)
+# Mainnet: 1
+VITE_CHAIN_ID=11155111
+
+# ==============================================
+# Instructions:
+# ==============================================
+# 1. Copy this file:
+#    cp ENV_TEMPLATE.txt .env
+#
+# 2. Get WalletConnect Project ID:
+#    - Visit https://cloud.walletconnect.com
+#    - Create a new project
+#    - Copy the Project ID
+#
+# 3. Deploy or get contract addresses:
+#    - Deploy NFT contract on your target network
+#    - Deploy or get USDT contract address
+#    - Update addresses above
+#
+# 4. NEVER commit .env to git!
+#    - It's already in .gitignore
+#    - Keep your keys secret
+# ==============================================
+
