@@ -39,7 +39,7 @@ jobs:
       id: create-car
       run: |
         mkdir -p .temp
-        npx ipfs-car pack build --output .temp/build.car --wrap
+        npx ipfs-car pack dist --output .temp/build.car --wrap
         ROOT_CID=$(npx ipfs-car roots .temp/build.car)
         echo "root_cid=$ROOT_CID" >> $GITHUB_OUTPUT
         echo "📍 Root CID: $ROOT_CID"
