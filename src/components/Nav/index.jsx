@@ -48,64 +48,95 @@ const Nav = ({ page }) => {
           </button>
         </div>
         <ul className="nav-ul">
+          <Link to="/" className="ul-3">
+            {page === "Dashboard"
+              ? <li className="ul-2">
+                <div className="ul-2-div">
+                  <a className="ul-2-a active">
+                    <i className="fa-solid fa-chart-line"></i>
+                    {"Dashboard"}
+                  </a>
+                </div>
+              </li>
+              : <div className="ul-3-div">
+                <a className="ul-3-a">
+                  <i className="fa-solid fa-chart-line"></i>
+                  {"Dashboard"}
+                </a>
+              </div>}
+          </Link>
 
-          <Link to="/Buy" className="ul-3">
+          <Link to="/buy" className="ul-3">
             {page === "Buy NFTs"
               ? <li className="ul-2">
                 <div className="ul-2-div">
                   <a className="ul-2-a active">
-                    <i className="fa-solid fa-arrows-rotate"></i>
+                    <i className="fa-solid fa-shopping-cart"></i>
                     {"Buy NFTs"}
                   </a>
                 </div>
               </li>
               : <div className="ul-3-div">
                 <a className="ul-3-a">
-                  <i className="fa-solid fa-arrows-rotate"></i>
+                  <i className="fa-solid fa-shopping-cart"></i>
                   {"Buy NFTs"}
                 </a>
               </div>}
           </Link>
 
-          {/* <Link to="/earn" className="ul-3">
-            {page === "earn" ? (
-              <li className="ul-2">
+          <Link to="/staking" className="ul-3">
+            {page === "Staking"
+              ? <li className="ul-2">
                 <div className="ul-2-div">
                   <a className="ul-2-a active">
-                  <i className="fas fa-coins"></i>
-                    {"earn"}
+                    <i className="fa-solid fa-lock"></i>
+                    {"Staking"}
                   </a>
                 </div>
               </li>
-            ) : (
-              <div className="ul-3-div">
+              : <div className="ul-3-div">
                 <a className="ul-3-a">
-                <i className="fas fa-coins"></i>
-                  {"earn"}
+                  <i className="fa-solid fa-lock"></i>
+                  {"Staking"}
                 </a>
-              </div>
-            )}
+              </div>}
           </Link>
 
-          <Link to="/referralZone" className="ul-3">
-            {page === "referralZone" ? (
-              <li className="ul-2">
+          <Link to="/rewards" className="ul-3">
+            {page === "Rewards"
+              ? <li className="ul-2">
                 <div className="ul-2-div">
                   <a className="ul-2-a active">
-                  <i className="fas fa-users"></i>
-                    {"referral_zone"}
+                    <i className="fa-solid fa-gift"></i>
+                    {"Rewards"}
                   </a>
                 </div>
               </li>
-            ) : (
-              <div className="ul-3-div">
+              : <div className="ul-3-div">
                 <a className="ul-3-a">
-                <i className="fas fa-users"></i>
-                  {"referral_zone"}
+                  <i className="fa-solid fa-gift"></i>
+                  {"Rewards"}
                 </a>
-              </div>
-            )}
-          </Link> */}
+              </div>}
+          </Link>
+
+          <Link to="/analytics" className="ul-3">
+            {page === "Analytics"
+              ? <li className="ul-2">
+                <div className="ul-2-div">
+                  <a className="ul-2-a active">
+                    <i className="fa-solid fa-chart-bar"></i>
+                    {"Analytics"}
+                  </a>
+                </div>
+              </li>
+              : <div className="ul-3-div">
+                <a className="ul-3-a">
+                  <i className="fa-solid fa-chart-bar"></i>
+                  {"Analytics"}
+                </a>
+              </div>}
+          </Link>
         </ul>
         {/* Social links - Update with your project links */}
         {/* <ul className="docs-ul">
