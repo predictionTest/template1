@@ -3,7 +3,7 @@ import { sonic } from "viem/chains";
 import { http } from "viem";
 
 // Get WalletConnect project ID from environment
-const projectId = import.meta.env.VITE_WALLETCONNECT_PROJECT_ID || "";
+const projectId = "f4252fe8d879bcfadd3c7bfbb829f4a6";
 
 if (!projectId) {
   console.warn(
