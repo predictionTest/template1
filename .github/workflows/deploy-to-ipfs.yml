@@ -28,6 +28,11 @@ jobs:
       run: npm ci
 
     - name: Build project
+      env:
+        VITE_ORACLE_CONTRACT_ADDRESS: ${{ secrets.VITE_ORACLE_CONTRACT_ADDRESS }}
+        MARKET_FACTORY_CONTRACT_ADDRESS: ${{ secrets.MARKET_FACTORY_CONTRACT_ADDRESS }}
+        VITE_SCAN_FUTURE_EPOCHS: ${{ secrets.VITE_SCAN_FUTURE_EPOCHS }}
+        VITE_CHUNK_SIZE: ${{ secrets.VITE_CHUNK_SIZE }}
       run: npm run build
 
     - name: Install deployment tools
