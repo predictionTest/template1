@@ -18,7 +18,6 @@ Built with React, TypeScript, Viem, and RainbowKit.
 
 - Node.js 18+
 - MetaMask wallet
-- AWS CLI + AWS CDK (for deployment)
 
 ### 1️⃣ Installation
 
@@ -88,52 +87,6 @@ npm run build
 
 ---
 
-## ☁️ AWS Deployment
-
-### Prerequisites
-
-```bash
-# Configure AWS credentials
-aws configure
-
-# Install AWS CDK globally
-npm install -g aws-cdk
-```
-
-### Deploy
-
-```bash
-# Make script executable
-chmod +x scripts/deploy.sh
-
-# Deploy to development
-./scripts/deploy.sh development
-
-# Deploy to staging
-./scripts/deploy.sh staging us-east-1
-
-# Deploy to production
-./scripts/deploy.sh production us-east-1
-```
-
-**Deployment includes:**
-
-- ✅ S3 bucket
-- ✅ CloudFront CDN
-- ✅ Global distribution
-- ✅ HTTPS only
-
-**Output:** CloudFront URL for your app
-
-### Destroy Infrastructure
-
-```bash
-chmod +x scripts/destroy.sh
-./scripts/destroy.sh development
-```
-
----
-
 ## 🌐 Sonic Network
 
 | Parameter      | Value                          |
@@ -170,8 +123,6 @@ frontend/
 │   ├── config/          # Contract ABI & Sonic config
 │   ├── types/           # TypeScript types
 │   └── App.tsx          # Main app
-├── infrastructure/      # AWS CDK
-├── scripts/            # Deployment scripts
 └── package.json
 ```
 
@@ -181,7 +132,6 @@ frontend/
 - **Viem** - Blockchain interactions
 - **RainbowKit + Wagmi** - Wallet connections
 - **Tailwind CSS** - Styling
-- **AWS CDK** - Infrastructure
 - **Vite** - Build tool
 
 ## 🐛 Troubleshooting
@@ -209,28 +159,6 @@ npm run build
 2. Ensure you have S tokens (Sonic gas)
 3. Check you're on Sonic network (Chain ID: 146)
 4. Check contract on https://explorer.soniclabs.com
-
-### AWS Deployment Fails
-
-```bash
-# Verify credentials
-aws sts get-caller-identity
-
-# Bootstrap CDK (first time only)
-cd infrastructure
-npx cdk bootstrap aws://ACCOUNT_ID/REGION
-```
-
-## 💰 AWS Cost Estimate
-
-| Environment     | Traffic     | Cost/Month |
-| --------------- | ----------- | ---------- |
-| **Development** | Low         | $0.12-0.50 |
-| **Production**  | 10k visits  | $1-2       |
-| **Production**  | 50k visits  | $3-5       |
-| **Production**  | 100k visits | $5-8       |
-
-**Free tier (first 12 months):** Almost free! 🎉
 
 ## 📚 Additional Documentation
 
