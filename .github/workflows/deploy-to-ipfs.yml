@@ -77,8 +77,12 @@ jobs:
             const rootCid = '${{ steps.create-car.outputs.root_cid }}';
             
             console.log('✅ Upload successful!');
+            console.log('📍 Pinata File ID:', upload.id);
             console.log('📍 IPFS CID:', upload.cid);
             console.log('📍 Root CID:', rootCid);
+            
+            // Write file ID to output for webhook
+            fs.appendFileSync(process.env.GITHUB_OUTPUT, \`pinata_file_id=\${upload.id}\\n\`);
             
             // CID-based subdomain gateway URL
             const cidGatewayUrl = \`https://\${rootCid}.ipfs.\${IPFS_GATEWAYS.DWEB}/\`;
@@ -110,6 +114,7 @@ jobs:
         WEBHOOK_URL: ${{ secrets.AWS_WEBHOOK_URL }}
         WEBHOOK_SECRET: ${{ secrets.WEBHOOK_GITHUB_SECRET }}
         ROOT_CID: ${{ steps.create-car.outputs.root_cid }}
+        PINATA_FILE_ID: ${{ steps.upload.outputs.pinata_file_id }}
       run: |
         echo "🔔 Sending deployment notification to webhook..."
         
@@ -124,6 +129,7 @@ jobs:
         fi
         
         echo "📍 CID: $ROOT_CID"
+        echo "📍 Pinata File ID: $PINATA_FILE_ID"
         echo "📍 Commit: ${{ github.sha }}"
         echo "📍 Repository: ${{ github.repository }}"
         
@@ -132,14 +138,15 @@ jobs:
           --arg repo "https://github.com/${{ github.repository }}" \
           --arg cid "$ROOT_CID" \
           --arg commit "${{ github.sha }}" \
-          '{githubRepo: $repo, cid: $cid, commitSha: $commit}')
+          --arg fileId "$PINATA_FILE_ID" \
+          '{githubRepo: $repo, cid: $cid, commitSha: $commit, pinataFileId: $fileId}')
         
         echo "📦 Payload: $PAYLOAD"
         
         # Generate GitHub webhook signature (HMAC-SHA256)
         SIGNATURE=$(echo -n "$PAYLOAD" | openssl dgst -sha256 -hmac "$WEBHOOK_SECRET" | sed 's/^.* //')
         
-        echo "🔐 Signature generated: sha256=$SIGNATURE"
+        echo "🔐 Signature generated"
         
         # Send webhook notification with signature
         RESPONSE=$(curl -s -X POST "$WEBHOOK_URL" \
