@@ -13,6 +13,8 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    # Skip if this is the template repository (only run in generated repos)
+    if: github.event.repository.name != 'template' && github.event.repository.name != 'template1'
     
     steps:
     - name: Checkout code
